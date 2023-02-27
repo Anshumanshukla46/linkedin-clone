@@ -1,0 +1,47 @@
+.header {
+    position: sticky;
+    top: 0;
+
+    /* important because it is sticky on the top*/
+
+    display: flex;
+    justify-content: space-evenly;
+    /* divide in equal space*/
+    border-bottom: 0.1px solid lightgray;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    width: 100%;
+    background-color: white;
+}
+
+.header_left {
+    display: flex;
+}
+
+.header_left>img {
+    object-fit: contain;
+    height: 40px;
+    margin-right: 20px;
+    cursor: pointer;
+}
+
+.header_search {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    border-radius: 5px;
+    height: 22px;
+    color: gray;
+    background: #eef3f8;
+    margin-right: 10px;
+}
+
+.header_search>input {
+    outline: none;
+    border: none;
+    background: none;
+}
+
+.header_right {
+    display: flex;
+}
