@@ -20,7 +20,7 @@ import { db } from "./firebase"
 import { query, orderBy, onSnapshot } from "firebase/firestore";
 import { useSelector } from 'react-redux';
 import { selectUser } from './features/userSlice';
-
+import FlipMove from 'react-flip-move';
 
 
 function Feed() {
@@ -137,19 +137,21 @@ function Feed() {
 
             {/* Posts */}
 
-            {posts.map(({ id, data: { name, description, message, photoUrl } }) => (
+            <FlipMove>
 
-                <Post
-                    key={id} // to re-render only unmatched key
-                    // name={name}
-                    name={description}
-                    description={description}
-                    message={message}
-                    photoUrl={photoUrl}
-                />
+                {posts.map(({ id, data: { name, description, message, photoUrl } }) => (
 
-            ))}
+                    <Post
+                        key={id} // to re-render only unmatched key
+                        // name={name}
+                        name={description}
+                        description={description}
+                        message={message}
+                        photoUrl={photoUrl}
+                    />
+                ))}
 
+            </FlipMove>
         </div>
     )
 }
