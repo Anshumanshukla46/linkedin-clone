@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux';
-import { login } from './features/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { login, selectUser } from './features/userSlice';
 import { auth } from './firebase';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+
 import "./Login.css"
 
 function Login() {
@@ -16,31 +18,57 @@ function Login() {
 
     const loginToTop = (e) => {
         e.preventDefault();
+
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userAuth) => {
+                const user = userAuth.user;
+
+                console.log("signInWithEmailAndPassword ", user);
+
+                dispatch(login({
+                    email: user.email,
+                    uid: user.uid,
+                    displayName: user.displayName,
+                    profileUrl: user.photoURL
+                }));
+            })
+            .catch((error) => {
+                alert(error.message);
+            });
     };
 
     const register = () => {
-        if (!name)
+        if (!name) {
             return alert("Please enter full name!");
+        }
 
-        // here mostly are predefined function in firebase itself
-        auth.createUserWithEmailAndPassword(email, password)
+        createUserWithEmailAndPassword(auth, email, password)
             .then((userAuth) => {
+                const user = userAuth.user;
+                console.log("createUserWithEmailAndPassword", user);
 
-                userAuth.user.updateProfile({
+                user.updateProfile({
                     displayName: name,
                     photoURL: profilePic
-                }).then(() => {
-                    dispatch(login({
-                        email: userAuth.user.email,
-                        uid: userAuth.user.uid,
-                        displayName: name,
-                        photoUrl: profilePic
-                    }))
                 })
-            }).catch((err) => alert(err))
+                    .then(() => {
+                        dispatch(login({
+                            email: user.email,
+                            uid: user.uid,
+                            displayName: name,
+                            photoUrl: profilePic
+                        }))
+                    })
+                    .catch((error) => {
+                        alert(error.message);
+                    });
+            })
+            .catch((error) => {
+                alert(error.message);
+            });
     };
 
-
+    console.log("login.js", (name || "null"));
 
     return (
         <div className='login'>
@@ -52,7 +80,7 @@ function Login() {
                     type="text"
                     placeholder='Full name (required if registering)'
                     value={name}
-                    onChange={e => setName(e.target.value)}
+                    onChange={(e) => setName(e.target.value)}
                 />
 
                 <input

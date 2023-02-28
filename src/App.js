@@ -13,6 +13,7 @@ function App() {
   const user = useSelector(selectUser)
   const dispatch = useDispatch();
 
+
   useEffect(() => {
     // if page refreshed
     auth.onAuthStateChanged(userAuth => {

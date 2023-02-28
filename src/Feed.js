@@ -13,51 +13,71 @@ import Post from "./Post";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth"
 import "firebase/compat/firestore"
+import { collection, addDoc, serverTimestamp } from "firebase/firestore"; // import new firestore methods
+
 import { db } from "./firebase"
-import { collection, getDocs } from 'firebase/firestore/lite';
+
+import { query, orderBy, onSnapshot } from "firebase/firestore";
+import { useSelector } from 'react-redux';
+import { selectUser } from './features/userSlice';
+
 
 
 function Feed() {
 
+    const user = useSelector(selectUser);
+    // console.log("I AM USER", user);
+
     const [input, setInput] = useState('');
 
     const [posts, setPosts] = useState([]);
-
     // render component with database from firebase
+    console.log(posts);
 
     useEffect(() => {
+        const q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
 
-        // onSnapshot give the real-time listener of database
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
 
-        // here "posts" is the state
-        db.collection("posts")
-            .orderBy("timestamp", "desc")
-            .onSnapshot(snap => {
+            const postsArray = [];
 
-                setPosts(snap.docs.map(item => (
-                    {
-                        id: item.id,
-                        data: item.data()
-                    }
-                )))
-            })
-
-    }, [])
+            querySnapshot.forEach((doc) => {
+                postsArray.push({
+                    id: doc.id,
+                    data: doc.data(),
+                });
 
 
-    const sendPost = (e) => {
-        e.preventDefault(); // not refresh
+            });
 
-        db.collection('posts').add({
-            name: "Anshuman Shukla",
-            description: "This is test",
-            message: input,
-            photoUrl: '',
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()// here time stamp of india,uk may be different but for server all will be same
+            setPosts(postsArray);
+
         });
+        return () => {
+            unsubscribe();
+        };
 
-        setInput('');// after submitting in database input-box should be empty
+    }, []);
 
+
+    const sendPost = async (e) => {
+        e.preventDefault(); // will not refresh
+
+        try {
+
+            await addDoc(collection(db, "posts"), {
+                name: user.displayName || "null",
+                description: user.email || "null",
+                message: input,
+                photoUrl: user.photoUrl || "",
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            setInput('');// after submitting in database input-box should be empty
+
+        } catch (err) {
+            console.log("Error in feed.js", err);
+        }
     }
 
     return (
@@ -121,7 +141,8 @@ function Feed() {
 
                 <Post
                     key={id} // to re-render only unmatched key
-                    name={name}
+                    // name={name}
+                    name={description}
                     description={description}
                     message={message}
                     photoUrl={photoUrl}

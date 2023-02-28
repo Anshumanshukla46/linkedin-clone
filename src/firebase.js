@@ -1,8 +1,8 @@
-import firebase from "firebase/compat/app";
 
-import "firebase/compat/auth"
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+import { getAuth } from "firebase/auth";
 
-import "firebase/compat/database"
 
 const firebaseConfig = {
     apiKey: "AIzaSyC1g52LKphBhSUnETIL8ncS85LOmCsCGmc",
@@ -15,11 +15,11 @@ const firebaseConfig = {
 };
 
 
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig);
 
-const db = firebaseApp.firestore(); // havibg database
+const db = getFirestore(firebaseApp); // having database
 
-const auth = firebase.auth(); // done authrisation
+const auth = getAuth(firebaseApp); // done authrisation
 
 export { db, auth };
  // now these can be accessible outside this fire also

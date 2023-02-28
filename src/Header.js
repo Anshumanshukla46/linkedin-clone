@@ -7,8 +7,8 @@ import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import ChatIcon from '@mui/icons-material/Chat';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import { useDispatch } from 'react-redux';
-import { logout } from './features/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout, selectUser } from './features/userSlice';
 import { auth } from './firebase';
 
 function Header() {
@@ -16,7 +16,7 @@ function Header() {
     const dispatch = useDispatch();
 
     const logOutOfApp = () => {
-        dispatch.apply(logout())
+        dispatch(logout())
         auth.signOut();
     }
 
@@ -54,7 +54,7 @@ function Header() {
                 <HeaderOption Icon={NotificationsIcon} title="Notifications" />
 
                 <HeaderOption
-                    avatar="./images/Anshuman Shukla Image.jpg"
+                    avatar={true}
                     title='me'
                     onClick={logOutOfApp}
                 />

@@ -9,11 +9,17 @@ import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 
 
 function Post({ name, description, message, photoUrl }) {
+
+    console.log(name, description, message, photoUrl);
+
     return (
         <div className='post'>
 
             <div className="post_header">
-                <Avatar />
+                <Avatar src={photoUrl} >
+                    {description[0]}
+                </Avatar>
+                {/* <Avatar /> */}
 
                 <div className="post_info">
                     <h2>{name}</h2>
