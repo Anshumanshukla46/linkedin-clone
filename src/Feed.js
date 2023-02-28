@@ -152,6 +152,7 @@ function Feed() {
                 ))}
 
             </FlipMove>
+
         </div>
     )
 }
