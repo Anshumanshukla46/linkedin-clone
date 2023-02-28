@@ -5,10 +5,10 @@ import image from "./images/Anshuman Shukla Image.jpg"
 
 
 // capital because Icon is components
-function HeaderOption({ avatar, Icon, title }) {
+function HeaderOption({ avatar, Icon, title, onClick }) {
     return (
 
-        <div className='headerOption'>
+        <div className='headerOption' onClick={onClick}>
 
             {/* components as "Icon" has been passed */}
 
